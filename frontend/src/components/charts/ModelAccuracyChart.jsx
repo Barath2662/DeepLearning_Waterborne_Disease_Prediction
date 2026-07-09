@@ -20,7 +20,7 @@ export default function ModelAccuracyChart({ analytics, loading }) {
   const borders = ['#2196f3', '#4caf50', '#9c27b0']
 
   const data = {
-    labels: labels.length ? labels : ['DNN', 'Random Forest', 'XGBoost'],
+    labels: labels.length ? labels : ['Random Forest', 'XGBoost'],
     datasets: [{
       label: 'Test Accuracy (%)',
       data: values.length ? values : [0, 0, 0],

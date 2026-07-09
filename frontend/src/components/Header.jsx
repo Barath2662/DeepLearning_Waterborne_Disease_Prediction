@@ -27,7 +27,7 @@ export default function Header({ backendOnline }) {
             </div>
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border border-blue-500/30 text-blue-400 bg-blue-500/10">
               <span>🧠</span>
-              DNN · RF · XGBoost
+              Random Forest · XGBoost
             </div>
           </div>
         </div>

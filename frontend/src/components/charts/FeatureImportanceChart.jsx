@@ -6,7 +6,7 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-// Static feature importance based on model analysis
+// Fallback feature importance used if backend analytics are unavailable
 const IMPORTANCE = [
   { feature: 'Bacterial Count', importance: 0.195 },
   { feature: 'E.coli Count', importance: 0.175 },
@@ -20,8 +20,16 @@ const IMPORTANCE = [
   { feature: 'Previous Cases', importance: 0.039 },
 ]
 
-export default function FeatureImportanceChart() {
-  const sorted = [...IMPORTANCE].sort((a, b) => a.importance - b.importance)
+export default function FeatureImportanceChart({ analytics, loading }) {
+  const backendImportance = analytics?.feature_importance ?? []
+  const source = backendImportance.length > 0
+    ? backendImportance.map(row => ({
+        feature: row.feature ?? row.index ?? row.name,
+        importance: row.importance ?? row.value ?? 0,
+      }))
+    : IMPORTANCE
+
+  const sorted = [...source].filter(item => item.feature).sort((a, b) => a.importance - b.importance)
 
   const data = {
     labels: sorted.map(d => d.feature),
@@ -75,12 +83,16 @@ export default function FeatureImportanceChart() {
   return (
     <div className="glass-card p-5 animate-fade-in">
       <h3 className="section-title">
-        <span>🔬</span> Feature Importance (SHAP)
+        <span>🔬</span> Feature Importance
       </h3>
       <p className="text-xs text-gray-400 -mt-2 mb-4">Key factors influencing disease risk prediction</p>
-      <div className="h-64">
-        <Bar data={data} options={options} />
-      </div>
+      {loading ? (
+        <div className="h-64 shimmer rounded-xl" />
+      ) : (
+        <div className="h-64">
+          <Bar data={data} options={options} />
+        </div>
+      )}
     </div>
   )
 }

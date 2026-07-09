@@ -23,9 +23,12 @@ export default function StatCards({ analytics, loading }) {
   const classDistrib = analytics?.class_distribution ?? {}
   const highRisk = classDistrib['High'] ?? '—'
   const modelAcc = analytics?.model_accuracy ?? {}
-  const dnnAcc = modelAcc['Deep Neural Network'] != null
-    ? `${(modelAcc['Deep Neural Network'] * 100).toFixed(1)}%`
-    : '—'
+  const bestModelName = analytics?.best_model ?? '—'
+  const bestModelAcc = analytics?.best_model_accuracy != null
+    ? `${(analytics.best_model_accuracy * 100).toFixed(1)}%`
+    : (modelAcc['XGBoost'] != null
+        ? `${(modelAcc['XGBoost'] * 100).toFixed(1)}%`
+        : (modelAcc['Random Forest'] != null ? `${(modelAcc['Random Forest'] * 100).toFixed(1)}%` : '—'))
 
   // compute avg water quality
   const stats = analytics?.dataset_stats ?? {}
@@ -47,8 +50,8 @@ export default function StatCards({ analytics, loading }) {
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       <StatCard icon="📊" label="Total Records" value={loading ? '—' : totalRecords.toLocaleString()}
         sub="Dataset size" color="linear-gradient(135deg,#2196f3,#1565c0)" loading={loading} />
-      <StatCard icon="🧠" label="DNN Accuracy" value={loading ? '—' : dnnAcc}
-        sub="Test set performance" color="linear-gradient(135deg,#9c27b0,#6a1b9a)" loading={loading} />
+      <StatCard icon="🧠" label="Best Model" value={loading ? '—' : bestModelName}
+        sub={`Accuracy: ${loading ? '—' : bestModelAcc}`} color="linear-gradient(135deg,#9c27b0,#6a1b9a)" loading={loading} />
       <StatCard icon="⚠️" label="High Risk Cases" value={loading ? '—' : (highRisk !== '—' ? highRisk.toLocaleString() : '—')}
         sub="In dataset" color="linear-gradient(135deg,#f44336,#b71c1c)" loading={loading} />
       <StatCard icon="💧" label="Avg Water Quality" value={loading ? '—' : avgQuality}

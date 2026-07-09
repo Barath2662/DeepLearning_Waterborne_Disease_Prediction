@@ -13,7 +13,7 @@ FRONTEND_DIR="$PROJECT_DIR/frontend"
 echo ""
 echo "╔══════════════════════════════════════════════════════════╗"
 echo "║   WaterGuard AI – Early Warning System Launcher          ║"
-echo "║   Deep Learning Based Water-Borne Disease Prediction     ║"
+echo "║   Machine Learning Based Water-Borne Disease Prediction  ║"
 echo "╚══════════════════════════════════════════════════════════╝"
 echo ""
 
@@ -22,20 +22,21 @@ if [ ! -d "$VENV_DIR" ]; then
     echo "📦 Creating Python virtual environment..."
     python3 -m venv "$VENV_DIR"
 fi
+PYTHON_BIN="$VENV_DIR/bin/python"
 source "$VENV_DIR/bin/activate"
 
 # ── 2. Install Python dependencies ────────────────────────────
 echo "📦 Installing/verifying Python dependencies..."
-pip install -q -r "$BACKEND_DIR/requirements.txt"
+"$PYTHON_BIN" -m pip install -q -r "$BACKEND_DIR/requirements.txt"
 
 # ── 3. Train model if not already trained ─────────────────────
-MODEL_FILE="$PROJECT_DIR/models/waterborne_model.h5"
+MODEL_FILE="$PROJECT_DIR/models/best_model.pkl"
 if [ ! -f "$MODEL_FILE" ]; then
     echo ""
-    echo "🧠 Training Deep Learning model (first run)..."
-    echo "   This may take 2-5 minutes..."
+    echo "🧠 Training machine learning models (first run)..."
+    echo "   This may take a few minutes..."
     cd "$PROJECT_DIR"
-    python train_model.py
+    "$PYTHON_BIN" train_model.py
     echo "✅ Model training complete!"
 else
     echo "✅ Trained model found – skipping training."
@@ -59,7 +60,7 @@ echo "  [Backend]  FastAPI  →  http://localhost:8000"
 echo "  [API Docs]           →  http://localhost:8000/docs"
 cd "$BACKEND_DIR"
 source "$VENV_DIR/bin/activate"
-uvicorn app:app --host 0.0.0.0 --port 8000 &
+"$PYTHON_BIN" -m uvicorn app:app --host 0.0.0.0 --port 8000 &
 BACKEND_PID=$!
 
 sleep 2

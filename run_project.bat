@@ -7,7 +7,7 @@ REM ============================================================
 echo.
 echo ╔══════════════════════════════════════════════════════════╗
 echo ║   WaterGuard AI – Early Warning System Launcher          ║
-echo ║   Deep Learning Based Water-Borne Disease Prediction     ║
+echo ║   Machine Learning Based Water-Borne Disease Prediction  ║
 echo ╚══════════════════════════════════════════════════════════╝
 echo.
 
@@ -21,19 +21,20 @@ IF NOT EXIST "%VENV_DIR%" (
     echo [INFO] Creating Python virtual environment...
     python -m venv "%VENV_DIR%"
 )
+SET PYTHON_BIN=%VENV_DIR%Scripts\python.exe
 CALL "%VENV_DIR%\Scripts\activate.bat"
 
 REM ── 2. Install Python dependencies ───────────────────────────
 echo [INFO] Installing Python dependencies...
-pip install -q -r "%BACKEND_DIR%\requirements.txt"
+"%PYTHON_BIN%" -m pip install -q -r "%BACKEND_DIR%\requirements.txt"
 
 REM ── 3. Train model if needed ─────────────────────────────────
-IF NOT EXIST "%PROJECT_DIR%models\waterborne_model.h5" (
+IF NOT EXIST "%PROJECT_DIR%models\best_model.pkl" (
     echo.
-    echo [INFO] Training Deep Learning model (first run)...
-    echo        This may take 2-5 minutes...
+    echo [INFO] Training machine learning models (first run)...
+    echo        This may take a few minutes...
     cd "%PROJECT_DIR%"
-    python train_model.py
+    "%PYTHON_BIN%" train_model.py
     echo [OK] Model training complete!
 ) ELSE (
     echo [OK] Trained model found - skipping training.
@@ -52,7 +53,7 @@ echo.
 echo [INFO] Starting FastAPI backend on http://localhost:8000 ...
 cd "%BACKEND_DIR%"
 CALL "%VENV_DIR%\Scripts\activate.bat"
-start "WaterGuard-Backend" cmd /k "uvicorn app:app --host 0.0.0.0 --port 8000"
+start "WaterGuard-Backend" cmd /k "\"%PYTHON_BIN%\" -m uvicorn app:app --host 0.0.0.0 --port 8000"
 
 timeout /t 3 /nobreak > nul
 

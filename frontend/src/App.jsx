@@ -105,13 +105,13 @@ export default function App() {
         {/* Bottom Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <WaterQualityChart analytics={analytics} loading={analyticsLoading} />
-          <FeatureImportanceChart />
+            <FeatureImportanceChart analytics={analytics} loading={analyticsLoading} />
         </div>
       </main>
 
       <footer className="text-center py-6 text-gray-500 text-sm border-t border-white/5 mt-8">
-        <p>WaterGuard AI – Deep Learning Based Early Warning System for Water-Borne Disease Prediction</p>
-        <p className="mt-1 text-xs text-gray-600">Powered by TensorFlow · FastAPI · React · Open Source Stack</p>
+        <p>WaterGuard AI – Machine Learning Based Early Warning System for Water-Borne Disease Prediction</p>
+        <p className="mt-1 text-xs text-gray-600">Powered by Random Forest · XGBoost · FastAPI · React · Open Source Stack</p>
       </footer>
     </div>
   )
