@@ -42,6 +42,13 @@ RECOMMENDATIONS = {
     "High": "IMMEDIATE ACTION REQUIRED. Issue public advisory, halt unsafe water usage, and deploy emergency response teams.",
 }
 
+# Waterborne diseases mapping by risk level
+DISEASE_MAPPING = {
+    "Low": ["No Disease - Water is Safe", "Safe for Consumption"],
+    "Medium": ["Typhoid", "Hepatitis A", "Diarrhea", "Giardiasis"],
+    "High": ["Cholera", "Dysentery", "Cryptosporidiosis", "E. coli Infection", "Hepatitis E"]
+}
+
 
 class PredictRequest(BaseModel):
     ph: float = Field(7.0, ge=0, le=14)
@@ -66,6 +73,7 @@ class PredictResponse(BaseModel):
     confidence: str
     recommendation: str
     probabilities: dict
+    diseases: list
 
 
 def _predict_proba(model, X: np.ndarray) -> np.ndarray:
@@ -102,6 +110,7 @@ def predict(req: PredictRequest):
             confidence=f"{conf:.1f}%",
             recommendation=RECOMMENDATIONS[risk],
             probabilities=probs,
+            diseases=DISEASE_MAPPING[risk],
         )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))

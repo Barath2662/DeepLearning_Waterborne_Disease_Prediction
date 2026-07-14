@@ -1,5 +1,5 @@
 export default function PredictionResult({ prediction }) {
-  const { risk, confidence, recommendation, probabilities } = prediction
+  const { risk, confidence, recommendation, probabilities, diseases } = prediction
 
   const riskConfig = {
     Low: {
@@ -99,6 +99,35 @@ export default function PredictionResult({ prediction }) {
                 </div>
               )
             })}
+          </div>
+        </div>
+      )}
+
+      {/* Waterborne Diseases */}
+      {diseases && diseases.length > 0 && (
+        <div className="mb-5">
+          <p className="text-xs text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <span>🦠</span> Potential Waterborne Diseases at Risk
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {diseases.map((disease, idx) => (
+              <div
+                key={idx}
+                className="rounded-lg p-3 border transition-all"
+                style={{
+                  background: `rgba(255,255,255,0.05)`,
+                  borderColor: cfg.color + '40',
+                  boxShadow: `0 0 12px ${cfg.glow}`,
+                }}
+              >
+                <p className="text-sm font-semibold text-white">{disease}</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {risk === 'Low' && 'No risk - water is safe'}
+                  {risk === 'Medium' && 'Moderate risk - elevated caution'}
+                  {risk === 'High' && 'High risk - immediate concern'}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       )}

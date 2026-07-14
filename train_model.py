@@ -79,7 +79,8 @@ print(f"Loaded dataset: {raw_df.shape}")
 
 TARGET = "disease_risk"
 CAT_COLS = ["water_source", "region_type", "season"]
-NUM_COLS = [c for c in raw_df.columns if c not in CAT_COLS + [TARGET]]
+EXCLUDE_COLS = CAT_COLS + [TARGET, "waterborne_disease"]
+NUM_COLS = [c for c in raw_df.columns if c not in EXCLUDE_COLS]
 
 num_imp = SimpleImputer(strategy="median")
 cat_imp = SimpleImputer(strategy="most_frequent")
@@ -88,7 +89,7 @@ work_df = raw_df.copy()
 work_df[NUM_COLS] = num_imp.fit_transform(work_df[NUM_COLS])
 work_df[CAT_COLS] = cat_imp.fit_transform(work_df[CAT_COLS])
 work_df = pd.get_dummies(work_df, columns=CAT_COLS)
-FEATURE_COLS = [c for c in work_df.columns if c != TARGET]
+FEATURE_COLS = [c for c in work_df.columns if c not in [TARGET, "waterborne_disease"]]
 
 label_encoder = LabelEncoder()
 y = label_encoder.fit_transform(work_df[TARGET])

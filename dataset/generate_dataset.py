@@ -22,6 +22,13 @@ def generate_dataset(n=N):
     water_sources = ["River", "Lake", "Groundwater", "Tap", "Well", "Pond"]
     region_types  = ["Urban", "Rural", "Semi-Urban", "Coastal", "Hilly"]
     seasons       = ["Summer", "Monsoon", "Winter", "Spring"]
+    
+    # Diseases mapping by risk level
+    disease_map = {
+        "Low": ["No Disease - Water is Safe", "Safe for Consumption"],
+        "Medium": ["Typhoid", "Hepatitis A", "Diarrhea", "Giardiasis"],
+        "High": ["Cholera", "Dysentery", "Cryptosporidiosis", "E. coli Infection", "Hepatitis E"]
+    }
 
     # Class sizes: 40% Low, 30% Medium, 30% High
     n_low    = int(n * 0.40)
@@ -57,7 +64,8 @@ def generate_dataset(n=N):
             population_density=pop_density, sanitation_index=sanitation,
             bacterial_count=bacterial, ecoli_count=ecoli,
             chlorine_level=chlorine, water_source=ws, region_type=rt,
-            season=season, previous_cases=prev_cases, disease_risk="Low"
+            season=season, previous_cases=prev_cases, disease_risk="Low",
+            waterborne_disease=np.random.choice(disease_map["Low"])
         ))
 
     # ── MEDIUM RISK cluster ─────────────────────────────────────────────────
@@ -86,7 +94,8 @@ def generate_dataset(n=N):
             population_density=pop_density, sanitation_index=sanitation,
             bacterial_count=bacterial, ecoli_count=ecoli,
             chlorine_level=chlorine, water_source=ws, region_type=rt,
-            season=season, previous_cases=prev_cases, disease_risk="Medium"
+            season=season, previous_cases=prev_cases, disease_risk="Medium",
+            waterborne_disease=np.random.choice(disease_map["Medium"])
         ))
 
     # ── HIGH RISK cluster ───────────────────────────────────────────────────
@@ -118,7 +127,8 @@ def generate_dataset(n=N):
             population_density=pop_density, sanitation_index=sanitation,
             bacterial_count=bacterial, ecoli_count=ecoli,
             chlorine_level=chlorine, water_source=ws, region_type=rt,
-            season=season, previous_cases=prev_cases, disease_risk="High"
+            season=season, previous_cases=prev_cases, disease_risk="High",
+            waterborne_disease=np.random.choice(disease_map["High"])
         ))
 
     # Shuffle records
